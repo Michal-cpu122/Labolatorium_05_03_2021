@@ -1,0 +1,61 @@
+//Main
+
+package com.company;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        while (true) {
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Imię: ");
+            String Imię = scan.nextLine();
+            System.out.println("Nazwisko: ");
+            String Nazwisko = scan.nextLine();
+            System.out.println("Rok urodzenia");
+            int Data_Urodzenia = scan.nextInt();
+
+            try {
+                PERSON prsn = new PERSON(IMIĘ, NAZWISKO, DATE_URODZENIA);
+                System.out.println(prsn);
+                break;
+            }
+            catch (IllegalArgumentException E) {
+                System.out.println(E.getMessage());
+            }
+        }
+
+    }
+}
+
+-----------------------------------------------------------------------------------
+//Person
+
+package com.company;
+
+public class PERSON {
+    String IMIĘ_A, IMIĘ_B;
+    int Data_Urodzenia;
+
+    private void checkPERSONDATA(String IMIĘ_A, String IMIĘ_B, int Data_Urodzenia) {
+        if (IMIĘ_A.isEmpty() == true) {
+            throw new IllegalArgumentException("Tutaj nie może być pusto!");
+        }
+        else if (IMIĘ_B.isEmpty() == true) {
+            throw new IllegalArgumentException("Tutaj nie może być pusto!");
+        }
+        else if ((Data_Urodzenia < 1950) || (Data_Urodzenia> 2015)) {
+            throw new IllegalArgumentException("Zła data urodzenia");
+        }
+    }
+    public PERSON (String IMIĘ_A, String IMIĘ_B, int Data_Urodzenia) {
+        checkPERSONDATA(IMIĘ_A, IMIĘ_B, Data_Urodzenia);
+        this.IMIĘ_A = IMIĘ_A;
+        this.IMIĘ_B = IMIĘ_B;
+        this.Data_Urodzenia = Data_Urodzenia;
+    }
+    @Override
+    public String toString(){
+        return String.format("IMIĘ: %s\nNazwisko: %s\nData_Urodzenia: %d", IMIE_A, IMIĘ_B, Data_Urodzenia);
+    }
+}

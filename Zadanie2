@@ -1,0 +1,114 @@
+//Main
+
+package com.company;
+import java.util.Scanner;
+
+public class Main {
+    private static Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) {
+        System.out.println("Czy chcesz założyć konto?");
+        boolean doCreateAccount = getYesNoAnswer();
+        if(!doCreateAccount) {
+            endProgram();
+        }
+        ACCOUNT account = createNewAccount();
+        System.out.println("Czy chcesz wypłacić?");
+        boolean shouldWithdrawMoney = getYesNoAnswer();
+        if(!shouldWithdrawMoney) {
+            endProgram();
+        }
+        while (true) {
+            System.out.println("Ile chcesz wypłacić?");
+            try {
+                int amount = getAmount();
+                try {
+                    account.WITHDRAW(amount);
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("To nie jest numer!");
+                }
+            }catch (NumberFormatException e){
+                System.out.println("To nie jest numer!");
+            }
+        }
+        System.out.printf("Dziękujemy za skorzystanie z naszego serwisu. Twój stan konta: %.2f $", account.getBAL());
+    }
+    private static ACCOUNT createNewAccount() {
+        String name = "";
+        while (name.length() < 1){
+            System.out.println("Jak się nazywasz?");
+            name = scanner.nextLine();
+        }
+        while (true) {
+            System.out.println("Ile chcesz wpłacić?");
+            try{
+                int initialAmount = getAmount();
+                return new ACCOUNT(name, initialAmount);
+            }catch (NumberFormatException e){
+                System.out.println("To nie jest numer!");
+            }
+        }
+    }
+    private static void endProgram() {
+        System.out.println(""Dziękujemy za skorzystanie z naszego serwisu");
+        System.exit(0);
+    }
+    private static int getAmount() {
+        Integer x =  Integer.parseInt(scanner.nextLine());
+        if (x instanceof Integer == false){
+            throw new NumberFormatException();
+        }
+        return x;
+    }
+    private static boolean getYesNoAnswer() {
+        String userAnswer = scanner.nextLine();
+        if(userAnswer.toLowerCase().contains("y")) {
+            return true;
+        }else if(userAnswer.toLowerCase().contains("n")) {
+            return false;
+        } else {
+            System.out.println("Tak or Nie");
+            return getYesNoAnswer();
+        }
+    }
+}
+
+------------------------------------------------------------------------------------------------------------
+//Account
+
+package com.company;
+
+public class ACCOUNT {
+    private String ACCOUNTNAME;
+    private double BALANCE;
+    public ACCOUNT(String ACCOUNTNAME, double initialBALANCE) {
+        this.ACCOUNTNAME = ACCOUNTNAME;
+        this.BALANCE = initialBALANCE;
+    }
+    public int WITHDRAW(int AMOUNT) {
+        if (BALANCE >= AMOUNT) {
+            BALANCE -= AMOUNT;
+            return AMOUNT;
+        }
+        else {
+            throw new INSUFFICIENTFUNDS(AMOUNT);
+        }
+    }
+    public double getBAL() {
+        return BALANCE;
+    }
+}
+
+-------------------------------------------------------------------------------------------------------------------
+
+//INSUFFICIENTFUNDS
+
+package com.company;
+
+public class INSUFFICIENTFUNDS extends RuntimeException {
+    public INSUFFICIENTFUNDS(int funds) {
+        super(String.format("You cant withdraw %d, because your account balance is to low!", funds));
+    }
+}
+
+
